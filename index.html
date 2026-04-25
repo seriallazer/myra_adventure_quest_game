@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Myra and Ivu's Night Quest</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <main id="app" class="app" aria-live="polite">
+      <section id="entryScreen" class="screen entry-screen is-active">
+        <div class="sakura-scene art-bg" aria-hidden="true">
+          <div class="moon-glow"></div>
+          <div class="tree tree-left"><span></span></div>
+          <div class="tree tree-right"><span></span></div>
+          <div class="treehouse"></div>
+          <div class="house-frame"></div>
+          <div class="car"></div>
+          <div class="petals"></div>
+        </div>
+        <div class="title-stack">
+          <p class="kicker">A cozy forest survival adventure</p>
+          <h1>Myra and Ivu's<br />Night Quest</h1>
+          <button id="playButton" class="primary-button">Play</button>
+        </div>
+        <button id="entryMute" class="sound-button" aria-label="Toggle music">♪</button>
+      </section>
+
+      <section id="chooseScreen" class="screen choose-screen">
+        <div class="sakura-scene art-bg choose-bg" aria-hidden="true">
+          <div class="tree tree-left"><span></span></div>
+          <div class="tree tree-right"><span></span></div>
+          <div class="treehouse small"></div>
+          <div class="house-frame small"></div>
+          <div class="petals"></div>
+        </div>
+        <div class="choose-panel">
+          <h2>Choose Your Character</h2>
+          <div class="character-grid">
+            <button class="character-card" data-character="myra" aria-label="Choose Myra">
+              <img class="character-portrait" src="assets/myra.png" alt="" />
+              <strong>Myra</strong>
+              <span>Brave builder</span>
+            </button>
+            <button class="character-card" data-character="ivu" aria-label="Choose Ivu">
+              <img class="character-portrait" src="assets/ivu.png" alt="" />
+              <strong>Ivu</strong>
+              <span>Forest scout</span>
+            </button>
+          </div>
+        </div>
+        <button id="chooseMute" class="sound-button" aria-label="Toggle music">♪</button>
+      </section>
+
+      <section id="gameScreen" class="screen game-screen">
+        <div class="game-shell">
+          <header class="hud">
+            <div class="player-chip">
+              <span id="hudAvatar" class="mini-avatar"></span>
+              <span id="hudName">Myra</span>
+            </div>
+            <div class="clock-card">
+              <span id="gameClock">8:00</span>
+              <span id="dayPhase">Morning</span>
+            </div>
+            <div class="supply-strip" aria-label="Supplies">
+              <span>🪵 <b id="woodCount">0</b></span>
+              <span>🍎 <b id="foodCount">0</b></span>
+              <span>🏠 <b id="houseCount">0%</b></span>
+            </div>
+          </header>
+
+          <canvas id="gameCanvas" width="1280" height="720" aria-label="Forest gameplay"></canvas>
+
+          <div id="warningBanner" class="warning-banner" role="status">
+            <strong>Night is approaching!</strong>
+            <span>Get inside the house, treehouse, car, or secret home before 9:00.</span>
+          </div>
+
+          <div id="messageBox" class="message-box" role="status">
+            Collect wood and food. Find shelter before Horror arrives.
+          </div>
+
+          <nav class="touch-controls" aria-label="Movement controls">
+            <div class="dpad">
+              <button data-dir="up" aria-label="Move up">▲</button>
+              <button data-dir="left" aria-label="Move left">◀</button>
+              <button data-dir="down" aria-label="Move down">▼</button>
+              <button data-dir="right" aria-label="Move right">▶</button>
+            </div>
+            <div class="actions">
+              <button id="collectButton">Collect</button>
+              <button id="buildButton">Build</button>
+              <button id="enterButton">Enter</button>
+            </div>
+          </nav>
+        </div>
+        <button id="gameMute" class="sound-button game-sound" aria-label="Toggle music">♪</button>
+      </section>
+    </main>
+
+    <script src="app.js"></script>
+  </body>
+</html>

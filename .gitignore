@@ -1,0 +1,5 @@
+videos/
+assets/*-source.png
+assets/*-uncropped.png
+assets/*-game.png
+.DS_Store
