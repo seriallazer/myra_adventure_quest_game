@@ -79,7 +79,24 @@ function showScreen(name) {
   screens[name].classList.add("is-active");
   currentScreen = name;
   startAudio();
+  audio?.ac.resume?.();
   setMusicMode(name);
+}
+
+function bindPress(element, handler) {
+  let handledAt = 0;
+  const run = (event) => {
+    const now = performance.now();
+    if (now - handledAt < 350) return;
+    handledAt = now;
+    event?.preventDefault?.();
+    startAudio();
+    audio?.ac.resume?.();
+    handler(event);
+  };
+  element.addEventListener("click", run);
+  element.addEventListener("touchend", run, { passive: false });
+  element.addEventListener("pointerup", run);
 }
 
 function resetGame(character) {
@@ -704,14 +721,14 @@ function loop(now) {
   requestAnimationFrame(loop);
 }
 
-document.getElementById("playButton").addEventListener("click", () => showScreen("choose"));
+bindPress(document.getElementById("playButton"), () => showScreen("choose"));
 document.querySelectorAll(".character-card").forEach((card) => {
-  card.addEventListener("click", () => resetGame(card.dataset.character));
+  bindPress(card, () => resetGame(card.dataset.character));
 });
-document.querySelectorAll(".sound-button").forEach((button) => button.addEventListener("click", toggleMute));
-document.getElementById("collectButton").addEventListener("click", collectNearby);
-document.getElementById("buildButton").addEventListener("click", buildHouse);
-document.getElementById("enterButton").addEventListener("click", enterSafePlace);
+document.querySelectorAll(".sound-button").forEach((button) => bindPress(button, toggleMute));
+bindPress(document.getElementById("collectButton"), collectNearby);
+bindPress(document.getElementById("buildButton"), buildHouse);
+bindPress(document.getElementById("enterButton"), enterSafePlace);
 
 document.querySelectorAll(".dpad button").forEach((button) => {
   const dir = button.dataset.dir;
