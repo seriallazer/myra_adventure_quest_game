@@ -15,6 +15,7 @@ const foodCount = document.getElementById("foodCount");
 const houseCount = document.getElementById("houseCount");
 const hudName = document.getElementById("hudName");
 const hudAvatar = document.getElementById("hudAvatar");
+const homeMenu = document.getElementById("homeMenu");
 
 const world = { width: 1280, height: 720 };
 const START_TIME = 8 * 60;
@@ -45,6 +46,7 @@ const state = {
   house: 0,
   safePlace: null,
   insidePlace: null,
+  menuOpen: false,
   wonNight: false,
   gameOver: false,
   noticeShown: false,
@@ -75,12 +77,33 @@ function makeResources() {
 }
 
 function showScreen(name) {
+  setHomeMenu(false, { silent: true });
   Object.values(screens).forEach((screen) => screen.classList.remove("is-active"));
   screens[name].classList.add("is-active");
   currentScreen = name;
   startAudio();
   audio?.ac.resume?.();
   setMusicMode(name);
+}
+
+function setHomeMenu(open, options = {}) {
+  state.menuOpen = open;
+  homeMenu.hidden = !open;
+  if (open && !options.silent) {
+    setMessage("Game paused. Choose resume, restart, or change character.");
+  }
+}
+
+function restartCurrentGame() {
+  setHomeMenu(false, { silent: true });
+  resetGame(selectedCharacter);
+}
+
+function returnToCharacterSelect() {
+  setHomeMenu(false, { silent: true });
+  state.gameOver = false;
+  state.wonNight = false;
+  showScreen("choose");
 }
 
 function bindPress(element, handler) {
@@ -107,6 +130,7 @@ function resetGame(character) {
   state.house = 0;
   state.safePlace = null;
   state.insidePlace = null;
+  state.menuOpen = false;
   state.wonNight = false;
   state.gameOver = false;
   state.noticeShown = false;
@@ -118,6 +142,7 @@ function resetGame(character) {
   hudName.textContent = character === "myra" ? "Myra" : "Ivu";
   hudAvatar.classList.toggle("ivu", character === "ivu");
   setMessage("Collect wood and food. Build a house or find a safe hiding place before Horror arrives.");
+  updateHud();
   showScreen("game");
 }
 
@@ -220,7 +245,7 @@ function currentSafeZone() {
 }
 
 function update(dt) {
-  if (currentScreen !== "game" || state.gameOver || state.wonNight) return;
+  if (currentScreen !== "game" || state.menuOpen || state.gameOver || state.wonNight) return;
 
   const move = { x: 0, y: 0 };
   if (keys.has("arrowup") || keys.has("w") || touchDirs.has("up")) move.y -= 1;
@@ -726,6 +751,10 @@ document.querySelectorAll(".character-card").forEach((card) => {
   bindPress(card, () => resetGame(card.dataset.character));
 });
 document.querySelectorAll(".sound-button").forEach((button) => bindPress(button, toggleMute));
+bindPress(document.getElementById("homeButton"), () => setHomeMenu(true));
+bindPress(document.getElementById("resumeButton"), () => setHomeMenu(false, { silent: true }));
+bindPress(document.getElementById("restartButton"), restartCurrentGame);
+bindPress(document.getElementById("changeCharacterButton"), returnToCharacterSelect);
 bindPress(document.getElementById("collectButton"), collectNearby);
 bindPress(document.getElementById("buildButton"), buildHouse);
 bindPress(document.getElementById("enterButton"), enterSafePlace);
